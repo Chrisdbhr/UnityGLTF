@@ -487,7 +487,7 @@ namespace UnityGLTF
 				// so that the property fields are not displayed. Otherwise it's confusing that editing them doesn't do anything.
 				foreach (var prop in propertyList)
 				{
-					if (prop.type == MaterialProperty.PropType.Texture)
+					if (prop.propertyType == ShaderPropertyType.Texture)
 						ShaderGraphHelpers.SetNoScaleOffset(prop);
 				}
 			}

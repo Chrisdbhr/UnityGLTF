@@ -24,6 +24,7 @@ namespace UnityGLTF
 #if !UNITY_6000_2_OR_NEWER
 		private Downsampling downsampling = Downsampling.None;
 #endif
+#if !UNITY_6000_0_OR_NEWER
 	    class CustomRenderPass : CopyColorPass
 	    {
 	        public Downsampling m_DownsamplingMethod;
@@ -129,8 +130,11 @@ namespace UnityGLTF
 #endif
 	        }
 	    }
+#endif
 
+#if !UNITY_6000_0_OR_NEWER
 	    private CustomRenderPass m_RoughRefractionPassNonRG;
+#endif
 #if UNITY_2023_3_OR_NEWER
 	    private bool usingRenderGraph = false;
 #endif
@@ -149,10 +153,12 @@ namespace UnityGLTF
 		    {
 #endif
 #if UNITY_2022_3_OR_NEWER
+#if !UNITY_6000_0_OR_NEWER
 			    if (m_RoughRefractionPassNonRG == null)
 			    {
 				    m_RoughRefractionPassNonRG = new CustomRenderPass(RenderPassEvent.AfterRenderingSkybox);
 			    }
+#endif
 #else
 				m_OpaqueColor.Init(CAMERA_OPAQUE_TEXTURENAME);
 #endif
@@ -178,18 +184,23 @@ namespace UnityGLTF
 			    return;
 		    
 #if UNITY_2022_3_OR_NEWER
+#if !UNITY_6000_0_OR_NEWER
 		    if (m_RoughRefractionPassNonRG != null)
 		    {
 				renderer.EnqueuePass(m_RoughRefractionPassNonRG);
 		    }
+#endif
 #if UNITY_2023_3_OR_NEWER
+#if !UNITY_6000_0_OR_NEWER
 		    else
+#endif
 		    if (usingRenderGraph && m_RoughRefractionPassRG != null)
 		    {
 			    renderer.EnqueuePass(m_RoughRefractionPassRG);
 		    }
 #endif
 #else
+#if !UNITY_6000_0_OR_NEWER
 	        if (m_RoughRefractionPassNonRG == null)
 	        {
 	            m_RoughRefractionPassNonRG = new CustomRenderPass(RenderPassEvent.AfterRenderingSkybox);
@@ -204,19 +215,24 @@ namespace UnityGLTF
 #endif
 	        renderer.EnqueuePass(m_RoughRefractionPassNonRG);
 #endif
+#endif
 	    }
 	    
 #if UNITY_2022_3_OR_NEWER && !UNITY_6000_2_OR_NEWER
 		public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
 		{
 #pragma warning disable 618
-			m_RoughRefractionPassNonRG.Setup(renderer.cameraColorTargetHandle, downsampling);
+#if !UNITY_6000_0_OR_NEWER
+			m_RoughRefractionPassNonRG?.Setup(renderer.cameraColorTargetHandle, downsampling);
+#endif
 #pragma warning restore 618
 		}
 
 		public void OnDestroy()
 		{
+#if !UNITY_6000_0_OR_NEWER
 			m_RoughRefractionPassNonRG?.Dispose();
+#endif
 		}
 #endif
 		
